@@ -1,10 +1,11 @@
 {
   "name": "a-star-map",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "author": "boboan",
   "license": "MIT",
+  "repository": "https://github.com/ranmeizi/a-star-map",
   "devDependencies": {
     "@types/node": "^17.0.8",
     "ts-loader": "^9.2.6",
@@ -15,7 +16,6 @@
     "webpack-cli": "^4.9.1"
   },
   "scripts": {
-    "start": "ts-node map.ts",
     "build": "tsc -d && webpack"
   }
 }
