@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<script src="https://unpkg.com/pubsub-js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="./dist/index.js"></script> -->
+		<style type="text/css">
+			.row {
+				display: flex;
+			}
+
+			.box {
+				height: 14px;
+				width: 14px;
+				border: 1px solid #000;
+				transition: 0.1s;
+				font-size: 8px;
+			}
+
+			.route {
+				color: #fff !important;
+
+			}
+
+			.close.route {
+				background-color: #f00 !important;
+				opacity: 1;
+			}
+
+			.open {
+				background-color: yellowgreen;
+			}
+
+			.close {
+				background-color: green !important;
+				opacity: 0.5;
+			}
+
+			.Infinity {
+				background-color: rgba(0, 0, 0, .8) !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="map-view">
+
+		</div>
+		<!-- <script> -->
+		<script type="module">
+			import * as AStar from './lib/index.js'
+			PubSub.subscribe('newmap', (event, json) => {
+				console.log(json)
+				for (let y = 0; y < json.length; y++) {
+					const row = document.createElement('div')
+					row.className = 'row'
+					document.getElementById('map-view').appendChild(row)
+					for (let x = 0; x < json[y].length; x++) {
+						const box = document.createElement('div')
+						box.className = 'box'
+						box.innerText = json[y][x] === Infinity ? '-' : json[y][x]
+						json[y][x] === Infinity && box.classList.add('Infinity')
+						row.appendChild(box)
+					}
+
+				}
+			})
+
+			PubSub.subscribe('route', (event, [y, x]) => {
+				document.querySelector(`.row:nth-child(${y + 1}) .box:nth-child(${x + 1})`).classList.add('route')
+			})
+			PubSub.subscribe('putopen', (event, [y, x]) => {
+				document.querySelector(`.row:nth-child(${y + 1}) .box:nth-child(${x + 1})`).classList.add('open')
+			})
+			PubSub.subscribe('putclose', (event, [y, x]) => {
+				document.querySelector(`.row:nth-child(${y + 1}) .box:nth-child(${x + 1})`).classList.add('close')
+			})
+
+			const map = new AStar.Map([
+				[Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, 1, 1, 1, 1, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1,
+					1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1,
+					1, 1, 1, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity
+				],
+				[1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1,
+					1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1,
+					1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1,
+					1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity,
+					Infinity, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity,
+					1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, Infinity, Infinity
+				],
+				[1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, Infinity
+				],
+				[1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, Infinity,
+					Infinity, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity
+				],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, Infinity, Infinity, Infinity
+				],
+				[1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, 1, Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, Infinity, Infinity, Infinity,
+					1, 1, 1, 1, 1, 1, 1, Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					Infinity, 1, 1, Infinity, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1,
+					Infinity
+				],
+				[Infinity, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity,
+					1, 1, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity
+				],
+				[Infinity, Infinity, 1, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity
+				],
+				[Infinity, Infinity, Infinity, 1, 1, 1, Infinity, 1, 1, 1, 1, 1, 1, Infinity, Infinity, 1, 1, 1, 1,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+					1, 1, 1, 1, 1, 1, 1, 1, Infinity
+				],
+				[Infinity, Infinity, Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, 1, 1, Infinity, Infinity, Infinity, Infinity,
+					Infinity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Infinity,
+					Infinity
+				],
+				[Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, 1, 1, 1, 1, 1, 1, 1, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity,
+					Infinity, Infinity, Infinity, Infinity, Infinity
+				]
+			]);
+
+			const r = map.map[0][0];
+
+			AStar.find(map.map, [16, 0], [10, 31]);
+		</script>
+	</body>
+
+</html>
