@@ -1,5 +1,5 @@
-import aFind from "./find.js";
-import Node from "./Node.js";
+import aFind from "./find";
+import Node from "./Node";
 declare type NodeMap = Node[][];
 export declare const find: typeof aFind;
 export declare class Map {

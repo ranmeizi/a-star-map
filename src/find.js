@@ -1,4 +1,4 @@
-import Bridge from "./asyncBridge.js";
+import Bridge from "./asyncBridge";
 const b = new Bridge(10);
 const DIRE = [
     "1",

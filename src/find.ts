@@ -1,5 +1,5 @@
-import RouteNode from "./Node.js";
-import Bridge from "./asyncBridge.js";
+import RouteNode from "./Node";
+import Bridge from "./asyncBridge";
 
 const b = new Bridge(10);
 

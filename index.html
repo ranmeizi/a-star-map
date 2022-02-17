@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Document</title>
 		<script src="https://unpkg.com/pubsub-js" type="text/javascript" charset="utf-8"></script>
-		<!-- <script src="./dist/index.js"></script> -->
+		<script src="./dist/index.js"></script>
 		<style type="text/css">
 			.row {
 				display: flex;
@@ -50,9 +50,9 @@
 		<div id="map-view">
 
 		</div>
-		<!-- <script> -->
-		<script type="module">
-			import * as AStar from './lib/index.js'
+		<script>
+		// <script type="module">
+			// import * as AStar from './lib/index.js'
 			PubSub.subscribe('newmap', (event, json) => {
 				console.log(json)
 				for (let y = 0; y < json.length; y++) {

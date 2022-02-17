@@ -1,10 +1,21 @@
 const path = require('path');
 
 module.exports = {
-    entry: './module/index.js',
+    mode: 'production',
+    entry: './src/index.ts',
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
         library: 'AStar'
     },
+    resolve: {
+        // Add `.ts` and `.tsx` as a resolvable extension.
+        extensions: [".ts", ".tsx", ".js"]
+    },
+    module: {
+        rules: [
+            // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
+            { test: /\.tsx?$/, loader: "ts-loader" }
+        ]
+    }
 };

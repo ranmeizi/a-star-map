@@ -1,5 +1,5 @@
-import aFind from "./find.js";
-import Node, { Direction } from "./Node.js";
+import aFind from "./find";
+import Node, { Direction } from "./Node";
 
 type NodeMap = Node[][];
 
