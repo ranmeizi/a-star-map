@@ -6,7 +6,10 @@ module.exports = {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
-        library: 'AStar'
+        library: {
+            name: 'AStar',
+            type: 'umd',
+        }
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
