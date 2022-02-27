@@ -1,7 +1,4 @@
 import RouteNode from "./Node";
-import Bridge from "./asyncBridge";
-
-const b = new Bridge(10);
 
 type coord = [number, number];
 
@@ -16,71 +13,73 @@ const DIRE: ["1", "2", "3", "4", "5", "6", "7", "8"] = [
   "8",
 ];
 
-export default function find(
-  map: RouteNode[][],
-  [startY, startX]: coord,
-  [endY, endX]: coord
-) {
-  function neighbor(node: RouteNode) {
-    for (let dir of DIRE) {
-      const isDiagonal = Number(dir) % 2 === 0;
-      if (
-        // 没有node
-        !node[dir] ||
-        // 不走斜边
-        (!node[dir]!.diagonal && isDiagonal) ||
-        // node已经在closelist中了
-        closeList.has(node[dir]) ||
-        // 不能走
-        !isWalkalbe((node[dir] as RouteNode).cost)
-      ) {
-        continue;
-      }
-      const n = node[dir] as RouteNode;
-
-      if (openList.has(n)) {
-        const pNode = n.parent;
-        if (node.G >= pNode!.G) {
+export default function (bridge: any) {
+  return function find(
+    map: RouteNode[][],
+    [startY, startX]: coord,
+    [endY, endX]: coord
+  ) {
+    function neighbor(node: RouteNode) {
+      for (let dir of DIRE) {
+        const isDiagonal = Number(dir) % 2 === 0;
+        if (
+          // 没有node
+          !node[dir] ||
+          // 不走斜边
+          (!node[dir]!.diagonal && isDiagonal) ||
+          // node已经在closelist中了
+          closeList.has(node[dir]) ||
+          // 不能走
+          !isWalkalbe((node[dir] as RouteNode).cost)
+        ) {
           continue;
         }
+        const n = node[dir] as RouteNode;
+
+        if (openList.has(n)) {
+          const pNode = n.parent;
+          if (node.G >= pNode!.G) {
+            continue;
+          }
+        }
+        n.G = isDiagonal ? getG2(node, n) : getG1(node, n);
+        n.H = getH1(n, end);
+        const F = n.G + n.H;
+        openList.set(n, F);
+
+        n.parent = node;
+        // 可视化
+        bridge && bridge.append(["onPutOpenlist", n.coord]);
       }
-      n.G = isDiagonal ? getG2(node, n) : getG1(node, n);
-      n.H = getH1(n, end);
-      const F = n.G + n.H;
-      openList.set(n, F);
+      openList.delete(node);
+      closeList.set(node, "");
 
-      n.parent = node;
       // 可视化
-      window && b.append(["putopen", n.coord]);
+      bridge && bridge.append(["onPutCloselist", node.coord]);
     }
-    openList.delete(node);
-    closeList.set(node, "");
+    const start = map[startY][startX];
+    let end = map[endY][endX];
+    const openList = new Map();
+    openList.set(start, 0);
+    const closeList = new Map();
+    neighbor(start);
 
+    // 找路径
+    while (!closeList.has(end)) {
+      // 选openlist F值最小的node进行neighbor判断
+      neighbor(getMinF(openList));
+    }
+
+    // console.log(end.parent);
+    while (end.parent) {
+      // 可视化
+      bridge && bridge.append(["onRoute", end.coord]);
+      end = end.parent;
+    }
     // 可视化
-    window && b.append(["putclose", node.coord]);
-  }
-  const start = map[startY][startX];
-  let end = map[endY][endX];
-  const openList = new Map();
-  openList.set(start, 0);
-  const closeList = new Map();
-  neighbor(start);
-
-  // 找路径
-  while (!closeList.has(end)) {
-    // 选openlist F值最小的node进行neighbor判断
-    neighbor(getMinF(openList));
-  }
-
-  // console.log(end.parent);
-  while (end.parent) {
-    // 可视化
-    window && b.append(["route", end.coord]);
-    end = end.parent;
-  }
-  // 可视化
-  window && b.append(["route", end.coord]);
-  b.run();
+    bridge && bridge.append(["onRoute", end.coord]);
+    bridge && bridge.run();
+  };
 }
 
 // 计算G值

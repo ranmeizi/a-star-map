@@ -1,11 +1,15 @@
 type argList = [string, [number, number]];
 
+type Emiter = (eventName: string, coord: [number, number]) => void;
+
 export default class Bridge {
   list: argList[] = [];
   timeout: number = 25;
+  emit: Emiter;
 
-  constructor(timeout: number) {
+  constructor(timeout: number, emit: Emiter) {
     this.timeout = timeout;
+    this.emit = emit;
   }
 
   append(args: argList) {
@@ -15,7 +19,7 @@ export default class Bridge {
   async run() {
     for (let args of this.list) {
       await sleep(this.timeout);
-      (<any>window).emit(...args);
+      this.emit(...args);
     }
   }
 }
@@ -23,7 +27,3 @@ export default class Bridge {
 async function sleep(timeout: number) {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 }
-
-(<any>window).emit = function (eventName: string, coord: [number, number]) {
-  (<any>window).PubSub.publish(eventName, coord);
-};

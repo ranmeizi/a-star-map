@@ -7,6 +7,8 @@ A* 寻路
 index.html 是寻路的 demo  
 使用 ```pubsub-js``` 做了寻路节点的可视化
 
+v2.0 写错了，放弃用pubsub-js了
+
 ## 安装
 ### npm
 ```npm install a-star-map``` 或 ```yarn add a-star-map```

@@ -10,7 +10,8 @@
       "module": "ESNext",
       "moduleResolution": "Node",
       "resolveJsonModule": true,
-      "isolatedModules": false
+      "isolatedModules": false,
+      "outDir":"./lib"
     },
     "include": ["./src"]
   }

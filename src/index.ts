@@ -1,27 +1,35 @@
-import aFind from "./find";
+import bindFind from "./find";
 import Node, { Direction } from "./Node";
+import EventBus from "./EventBus";
+import Bridge from "./asyncBridge";
 
 type NodeMap = Node[][];
 
-export const find = aFind;
-
-export class Map {
+export class Map extends EventBus {
   static notInRange(x: number, y: number) {
     return new RangeError(`x:${x},y:${y},not in range`);
   }
 
   // 地图
   public map: NodeMap = [];
+  // 桥
+  private bridge = new Bridge(10, (...args) => this._emit(...args));
 
   constructor(json: number[][]) {
-    // 从0，0创建四叉树网络
+    super();
+    // 从0，0创建八叉树网络
     this.initMap(json);
-
-    if (window) {
-      (<any>window).PubSub.publish("newmap", json);
-    }
   }
 
+  // 传递find的emit函数
+  private _emit(eventName: string, coord: [number, number]) {
+    this.emit(eventName, coord);
+  }
+
+  // find函数
+  public find = bindFind(this.bridge);
+
+  // 初始化地图
   private initMap(json: number[][]) {
     for (let y = 0; y < json.length; y++) {
       this.map[y] = [];
@@ -45,6 +53,7 @@ export class Map {
     }
   }
 
+  // 设置节点属性
   public setNode(
     y: number,
     x: number,
