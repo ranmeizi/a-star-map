@@ -5,7 +5,7 @@ import Bridge from "./asyncBridge";
 
 type NodeMap = Node[][];
 
-export class Map extends EventBus {
+export default class Map extends EventBus {
   static notInRange(x: number, y: number) {
     return new RangeError(`x:${x},y:${y},not in range`);
   }
@@ -73,3 +73,5 @@ export class Map extends EventBus {
     return false;
   }
 }
+
+export { Map };

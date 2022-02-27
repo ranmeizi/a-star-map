@@ -39,8 +39,8 @@ script 引入使用 dist 文件夹下的 index.js
     ])
 ```
 #### 类型
-```RouteNode``` 8叉树节点 见 dist/Node.d.ts  
-```Astar.Map``` 见 dist/index.d.ts
+```RouteNode``` 8叉树节点 见 [dist/Node.d.ts](./dist/Node.d.ts)  
+```Astar.Map``` 见 [dist/index.d.ts](./dist/index.d.ts)
 #### 属性
 ```map.map``` 地图 存储 RouteNode 的二维数组  
 #### 方法
@@ -54,11 +54,11 @@ cost (花费) number  可选
 diagonal (允许斜边通行)  boolean  可选  
 
 ##### on
-```map.on(name:string ,data:any):void```  
+```map.on(name:string ,(data:any)=>void):void```  
 监听事件
 
 ##### un
-```map.un(name:string ,data:any):void```  
+```map.un(name:string ,(data:any)=>void):void```  
 解绑事件
 
 ##### emit
