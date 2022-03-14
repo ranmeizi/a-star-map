@@ -18,7 +18,7 @@ export default function (bridge: any) {
     map: RouteNode[][],
     [startY, startX]: coord,
     [endY, endX]: coord
-  ) {
+  ): coord[] {
     function neighbor(node: RouteNode) {
       for (let dir of DIRE) {
         const isDiagonal = Number(dir) % 2 === 0;
@@ -71,14 +71,18 @@ export default function (bridge: any) {
     }
 
     // console.log(end.parent);
+    const route = []
     while (end.parent) {
       // 可视化
       bridge && bridge.append(["onRoute", end.coord]);
+      route.unshift(end.coord)
       end = end.parent;
     }
     // 可视化
+    route.unshift(end.coord)
     bridge && bridge.append(["onRoute", end.coord]);
     bridge && bridge.run();
+    return route
   };
 }
 

@@ -7,23 +7,30 @@ A* 寻路
 index.html 是寻路的 demo  
 使用 ```pubsub-js``` 做了寻路节点的可视化
 
-v2.0 写错了，放弃用pubsub-js了
-
 ## 安装
 ### npm
 ```npm install a-star-map``` 或 ```yarn add a-star-map```
 ```js
     import * as AStar from 'a-star-map'
-    // Astar.Map
-    // Astar.find
+
+    const map = new AStar.Map([
+        [1,3,1],
+        [1,5,1],
+        [4,2,1]
+    ])
+    const route = AStar.find(map.map, [0, 0], [2,2])
 ```
 ### browser script 引入
 script 引入使用 dist 文件夹下的 index.js
 ```html
 <script src='./dist/index.js'></script>
 <script>
-    // window.Astar.Map
-    // window.Astar.find
+    var map = new window.AStar.Map([
+        [1,3,1],
+        [1,5,1],
+        [4,2,1]
+    ])
+    const route = AStar.find(map.map, [0, 0], [2,2])
 </script>
 ```
 
@@ -32,7 +39,7 @@ script 引入使用 dist 文件夹下的 index.js
 ### Astar.Map 地图类
 #### 创建地图
 ```js
-    const map = new Astar.Map([
+    const map = new AStar.Map([
         [1,3,1],
         [1,5,1],
         [4,2,1]
@@ -80,7 +87,7 @@ data:[number,number]
 从终点到起点依次触发的路径事件
 
 ## 更新地图
-
+默认地图格子允许斜边通行
 ```js
 // 使0,0格子不可行走
 map.setNode(0,0,{cost:Infinity})
@@ -91,5 +98,5 @@ map.setNode(0,0,{cost:5,diagonal:true})
 ## 寻路
 ```js
 // 创建地图...
-AStar.find(map.map, [0, 0], [2,2])
+const route = AStar.find(map.map, [0, 0], [2,2])
 ```

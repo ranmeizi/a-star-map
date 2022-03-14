@@ -310,7 +310,8 @@
 			document.querySelector(`.row:nth-child(${y + 1}) .box:nth-child(${x + 1})`).classList.add('close')
 		})
 
-		map.find(map.map, [16, 0], [10, 31]);
+		const route = map.find(map.map, [16, 0], [10, 31]);
+		console.log(route)
 	</script>
 </body>
 
